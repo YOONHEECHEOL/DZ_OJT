@@ -16,6 +16,7 @@ import PropsRender from './app-root/PropsSample/PropsRender';
 import LifeCycleSample from './app-root/LifeCycleSample/LifeCycleSample';
 
 import CardListSample from './app-root/CardListSample/CardListSample';
+import PortalSample from './app-root/CardListSample/PortalSample';
 
 class App extends Component {
 
@@ -51,9 +52,14 @@ class App extends Component {
           <button onClick={() => { this.onClickMainTab("PropsSample") }}>PropsSample</button>
           <button onClick={() => { this.onClickMainTab("LifeCycleSample") }}>LifeCycleSample</button>
           <button onClick={() => { this.onClickMainTab("CardListSample") }}>CardListSample</button>
+          <button onClick={() => { this.onClickMainTab("PortalSample") }}>PortalSample</button>
         </div>
         {
           mainTabVal == "CardListSample" ? <CardListSample />
+            : undefined
+        }
+        {
+          mainTabVal == "PortalSample" ? <PortalSample />
             : undefined
         }
         {

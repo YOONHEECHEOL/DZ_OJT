@@ -4,14 +4,15 @@ import style from './cardListSample.module.css';
 export default class CallCustomer extends Component {
   state = {
     arrayInfo: [
-      { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000' },
-      { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233' },
-      { groupCd: 'C3', groupNm: '컨설팅그룹', totCnt: '252', amt: '16778233' },
-      { groupCd: 'C4', groupNm: '기타', totCnt: '164', amt: '10953315' },
-      { groupCd: 'C5', groupNm: '유지보수그룹', totCnt: '164', amt: '10952362' },
-      { groupCd: 'C6', groupNm: '개발그룹', totCnt: '136', amt: '9075428' },
-      { groupCd: 'C7', groupNm: '경영관리그룹', totCnt: '104', amt: '6960670' }
-    ]
+      { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000', checked: '' },
+      { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233', checked: '' },
+      { groupCd: 'C3', groupNm: '컨설팅그룹', totCnt: '252', amt: '16778233', checked: '' },
+      { groupCd: 'C4', groupNm: '기타', totCnt: '164', amt: '10953315', checked: '' },
+      { groupCd: 'C5', groupNm: '유지보수그룹', totCnt: '164', amt: '10952362', checked: '' },
+      { groupCd: 'C6', groupNm: '개발그룹', totCnt: '136', amt: '9075428', checked: '' },
+      { groupCd: 'C7', groupNm: '경영관리그룹', totCnt: '104', amt: '6960670', checked: '' }
+    ],
+    checkedList: new Set()
   }
 
 
@@ -77,12 +78,56 @@ export default class CallCustomer extends Component {
     return { totCnt: totCnt, array: result };
   }
 
+  componentDidUpdate(previousProps, previousState) {    
+    if (previousProps.isTotalChk !== this.props.isTotalChk)
+      this.isTotalChk();
+  }
+
+  // 전체선택 시
+  isTotalChk = () => {
+    let isTotalChk = this.props.isTotalChk;
+    let arrTmp = this.state.arrayInfo;
+    let tmp = new Set();
+
+    if (isTotalChk) {
+      arrTmp.map(i => tmp.add(i.groupCd));
+      this.setState({ checkedList: tmp });
+    } else {
+      arrTmp.map(i => tmp.delete(i.groupCd));
+      this.setState({ checkedList: tmp });
+    }
+    console.log(this.state.checkedList)
+  }
+
+  // 단건 선택 시
+  setIsChecked = (groupCd, isChecked) => {
+    let tmp = this.state.checkedList;
+
+    // 기존에 체크된것이 있는지 확인 없으면 add, 있으면 delete
+    if (isChecked) { // 추가된것이 없으면
+      tmp.add(groupCd);
+
+      this.setState(
+        {checkedList: tmp, isChecked: true}
+      )
+    } else if (!isChecked && tmp.has(groupCd)) {
+      tmp.delete(groupCd);
+
+      this.setState(
+        { checkedList: tmp, isChecked: false }
+      )
+    }    
+    console.log(this.state.checkedList)
+  }
+
   render() {
     let sortTp = this.props.sortTp;
     let txtSearch = this.props.txtSearch;
     let isPaging = this.props.isPaging;
     let pagePerCnt = this.props.pagePerCnt;
     let curPage = this.props.curPage;
+
+    let isTotalChk = this.props.isTotalChk;
 
     return (
       <>
@@ -91,14 +136,9 @@ export default class CallCustomer extends Component {
           this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage).array.map((e) => {
             return (
               <div key={e.groupCd} className={style.cardList__body__cards}>
-                <div>
-                  <input id={'chk' + e.groupCd} type='checkbox' />
-                  <label htmlFor={'chk' + e.groupCd}>
-                    <svg focusable="false" viewBox="0 0 24 24" style={{ display: 'inline-block', fill: 'rgb(0, 0, 0)', height: '14px', width: '14px', position: 'absolute', left: '0px', top: '50%', margin: '-7px 0 0 0', cursor: 'pointer' }}>
-                      {/* <path fill="#B5B4B4" d="M22.285,1.715V22.22H1.725V1.715H22.285 M24,0H0.01v23.935H24V0L24,0z"></path> */}
-                      <polygon fill="#2A93F7" points="20.542,8.304 18.185,5.943 9.958,14.085 5.827,9.956 3.467,12.317 9.92,18.824 "></polygon>
-                    </svg>
-                  </label>
+                <div>             
+                  <input id={'chk' + e.groupCd} type='checkbox' onChange={(item) => this.setIsChecked(e.groupCd, item.target.checked)} />
+                  <LabelFor groupCd={e.groupCd} />
                   {e.groupNm}
                 </div>
 
@@ -113,4 +153,21 @@ export default class CallCustomer extends Component {
       </>
     )
   }
+}
+
+export class LabelFor extends Component {
+
+  render() {
+    let groupCd = this.props.groupCd;
+
+    return (
+      <label htmlFor={'chk' + groupCd}>
+        <svg focusable="false" viewBox="0 0 24 24" style={{ display: 'inline-block', fill: 'rgb(0, 0, 0)', height: '14px', width: '14px', position: 'absolute', left: '0px', top: '50%', margin: '-7px 0 0 0', cursor: 'pointer' }}>
+          {/* <path fill="#B5B4B4" d="M22.285,1.715V22.22H1.725V1.715H22.285 M24,0H0.01v23.935H24V0L24,0z"></path> */}
+          <polygon fill="#2A93F7" points="20.542,8.304 18.185,5.943 9.958,14.085 5.827,9.956 3.467,12.317 9.92,18.824 "></polygon>
+        </svg>
+      </label>
+    )
+  }
+
 }
