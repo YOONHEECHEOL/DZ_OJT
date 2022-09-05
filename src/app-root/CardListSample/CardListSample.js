@@ -4,7 +4,7 @@ import style from './cardListSample.module.css';
 
 export default class CardListSample extends Component {
 
-  refOutside = React.createRef();
+  refRoot = React.createRef();
 
   state = {
     sortTp: '0',
@@ -49,12 +49,12 @@ export default class CardListSample extends Component {
     let isTotalChk = this.state.isTotalChk;
 
     return (
-      <section style={{ width: '100vw', height: '100vh', background: '#f1f1f1' }}>
+      <section style={{ width: '100vw', height: '100vh', background: '#f1f1f1' }} ref={this.refRoot}>
         <h2 className={style.title} >OJT 1차 과제 카드리스트 만들기</h2>
-        <div className={style.cardList} ref={this.refOutside}>
+        <div className={style.cardList}>
           <CardListHeader
             searchArea={<SearchArea setTxtSearch={this.setTxtSearch} />}
-            options={<Options setSortTp={this.setSortTp} setIsTotalChk={this.setIsTotalChk} refOutside={this.refOutside} />}
+            options={<Options setSortTp={this.setSortTp} setIsTotalChk={this.setIsTotalChk} refRoot={this.refRoot} />}
           />
           <CardListBody
             children={
@@ -120,7 +120,6 @@ export class SearchArea extends Component {
 export class Options extends Component {
 
   clickedSortTp = React.createRef();
-  refOptions = React.createRef();
 
   state = {
     isActive: false,
@@ -129,7 +128,7 @@ export class Options extends Component {
 
   // 외부화면 클릭 감지
   // componentDidUpdate(privProps, privState) {
-  //   let target = this.props.refOutside;
+  //   let target = this.props.refRoot;
   //   let documentAddEvent = (e) => {
   //     target.current.removeEventListener('click', documentAddEvent)
   //     console.log(target)
@@ -140,7 +139,7 @@ export class Options extends Component {
   //     // console.log(e.target)
 
   //     // console.log(e.target.nodeName)
-  //     // console.log(this.props.refOutside.current)
+  //     // console.log(this.props.refRoot.current)
   //   }
 
   //   // documentAddEvent();
@@ -149,17 +148,39 @@ export class Options extends Component {
   //   // }
   // }
 
+  setEventOnRoot = (e) => {
+    const root = this.props.refRoot.current;
+
+    // 패널 열기
+    console.log(e.target)
+    
+    this.setState({ isActive: true })
+
+    const addEventHandler = (e) => {
+      root.removeEventListener('click', addEventHandler);
+      console.log(e.target.nodeName)
+      // this.setActive();
+      
+      if (e.target.dataset.sort == undefined) { // 외부 클릭 시 버튼 닫기
+        // this.setActive();
+        this.setState({ isActive: false })
+      } 
+    }
+
+    root.addEventListener('click', addEventHandler);
+  }
+
   // button 클릭 시 정렬메뉴 표시
   setActive = () => {
     this.setState(this.state.isActive ? { isActive: false } : { isActive: true })
 
-    const targetChk = (e) => {
-      document.removeEventListener('click', targetChk);
+    // const targetChk = (e) => {
+    //   document.removeEventListener('click', targetChk);
 
-      console.log(this.refOptions.current.contains(e.target))
-    }
+    //   console.log(this.refOptions.current.contains(e.target))
+    // }
 
-    document.addEventListener('click', targetChk)
+    // document.addEventListener('click', targetChk)
   }
 
   // sortTp 변경
@@ -178,7 +199,7 @@ export class Options extends Component {
 
   render() {
     return (
-      <div className={style.cardList__header__options} ref={this.refOptions}>
+      <div className={style.cardList__header__options}>
         <div>
           <input id='totChk' type='checkbox' onChange={this.props.setIsTotalChk} />
           <label htmlFor='totChk' tabIndex="0" style={{ outline: 'none' }}>
@@ -189,7 +210,7 @@ export class Options extends Component {
           <span htmlFor={'totalCheck'}>전체선택</span>
         </div>
 
-        <button onClick={() => this.setActive()}>
+        <button onClick={(e) => this.setEventOnRoot(e)}>
           {this.state.selectedFilter}
           <img width={'12'} alt='arrow_icon' src={require('./img/ic_arrow_down_02_s_normal@2x.e77da496.png')} />
           <div
