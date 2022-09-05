@@ -4,15 +4,16 @@ import style from './cardListSample.module.css';
 export default class CallCustomer extends Component {
   state = {
     arrayInfo: [
-      { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000', checked: '' },
-      { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233', checked: '' },
-      { groupCd: 'C3', groupNm: '컨설팅그룹', totCnt: '252', amt: '16778233', checked: '' },
-      { groupCd: 'C4', groupNm: '기타', totCnt: '164', amt: '10953315', checked: '' },
-      { groupCd: 'C5', groupNm: '유지보수그룹', totCnt: '164', amt: '10952362', checked: '' },
-      { groupCd: 'C6', groupNm: '개발그룹', totCnt: '136', amt: '9075428', checked: '' },
-      { groupCd: 'C7', groupNm: '경영관리그룹', totCnt: '104', amt: '6960670', checked: '' }
+      { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000', },
+      { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233', },
+      { groupCd: 'C3', groupNm: '컨설팅그룹', totCnt: '252', amt: '16778233', },
+      { groupCd: 'C4', groupNm: '기타', totCnt: '164', amt: '10953315', },
+      { groupCd: 'C5', groupNm: '유지보수그룹', totCnt: '164', amt: '10952362', },
+      { groupCd: 'C6', groupNm: '개발그룹', totCnt: '136', amt: '9075428', },
+      { groupCd: 'C7', groupNm: '경영관리그룹', totCnt: '104', amt: '6960670', }
     ],
-    checkedList: new Set()
+    checkedList: new Set(),
+    isAllChecked: false
   }
 
 
@@ -78,7 +79,7 @@ export default class CallCustomer extends Component {
     return { totCnt: totCnt, array: result };
   }
 
-  componentDidUpdate(previousProps, previousState) {    
+  componentDidUpdate(previousProps, previousState) {
     if (previousProps.isTotalChk !== this.props.isTotalChk)
       this.isTotalChk();
   }
@@ -91,10 +92,10 @@ export default class CallCustomer extends Component {
 
     if (isTotalChk) {
       arrTmp.map(i => tmp.add(i.groupCd));
-      this.setState({ checkedList: tmp });
+      this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
     } else {
-      arrTmp.map(i => tmp.delete(i.groupCd));
-      this.setState({ checkedList: tmp });
+      tmp.clear();
+      this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
     }
     console.log(this.state.checkedList)
   }
@@ -103,20 +104,19 @@ export default class CallCustomer extends Component {
   setIsChecked = (groupCd, isChecked) => {
     let tmp = this.state.checkedList;
 
-    // 기존에 체크된것이 있는지 확인 없으면 add, 있으면 delete
-    if (isChecked) { // 추가된것이 없으면
+    if (isChecked) {
       tmp.add(groupCd);
 
       this.setState(
-        {checkedList: tmp, isChecked: true}
+        { checkedList: tmp }
       )
     } else if (!isChecked && tmp.has(groupCd)) {
       tmp.delete(groupCd);
 
       this.setState(
-        { checkedList: tmp, isChecked: false }
+        { checkedList: tmp }
       )
-    }    
+    }
     console.log(this.state.checkedList)
   }
 
@@ -135,9 +135,11 @@ export default class CallCustomer extends Component {
           // console.log(this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage))
           this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage).array.map((e) => {
             return (
-              <div key={e.groupCd} className={style.cardList__body__cards}>
-                <div>             
-                  <input id={'chk' + e.groupCd} type='checkbox' onChange={(item) => this.setIsChecked(e.groupCd, item.target.checked)} />
+              <div key={e.groupCd} className={this.state.checkedList.has(e.groupCd) ? style.cardList__body__cards__checked : style.cardList__body__cards}>
+                <div>
+                  <input id={'chk' + e.groupCd} type='checkbox' onChange={
+                    (item) => this.setIsChecked(e.groupCd, item.target.checked)
+                  } checked={this.state.checkedList.has(e.groupCd) ? true : false} />
                   <LabelFor groupCd={e.groupCd} />
                   {e.groupNm}
                 </div>

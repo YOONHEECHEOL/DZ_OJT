@@ -4,6 +4,8 @@ import style from './cardListSample.module.css';
 
 export default class CardListSample extends Component {
 
+  refOutside = React.createRef();
+
   state = {
     sortTp: '0',
     txtSearch: '',
@@ -34,7 +36,6 @@ export default class CardListSample extends Component {
     this.setState(
       this.state.isTotalChk ? { isTotalChk: false } : { isTotalChk: true }
     )
-    console.log(this.state.isTotalChk)
   }
 
   render() {
@@ -48,12 +49,12 @@ export default class CardListSample extends Component {
     let isTotalChk = this.state.isTotalChk;
 
     return (
-      <>
+      <section style={{ width: '100vw', height: '100vh', background: '#f1f1f1' }}>
         <h2 className={style.title} >OJT 1차 과제 카드리스트 만들기</h2>
-        <div className={style.cardList}>
+        <div className={style.cardList} ref={this.refOutside}>
           <CardListHeader
             searchArea={<SearchArea setTxtSearch={this.setTxtSearch} />}
-            options={<Options setSortTp={this.setSortTp} setIsTotalChk={this.setIsTotalChk} />}            
+            options={<Options setSortTp={this.setSortTp} setIsTotalChk={this.setIsTotalChk} refOutside={this.refOutside} />}
           />
           <CardListBody
             children={
@@ -63,11 +64,11 @@ export default class CardListSample extends Component {
                 isPaging={isPaging}
                 pagePerCnt={pagePerCnt}
                 curPage={curPage}
-                isTotalChk={isTotalChk}                
+                isTotalChk={isTotalChk}
               />}
           />
         </div>
-      </>
+      </section>
     )
   }
 
@@ -89,7 +90,7 @@ export class CardListHeader extends Component {
 
 }
 
-export class SearchArea extends Component { 
+export class SearchArea extends Component {
 
   refInputTxt = React.createRef();
 
@@ -100,7 +101,7 @@ export class SearchArea extends Component {
   }
 
   render() {
-  
+
     let refInputTxt = this.refInputTxt.current;
     let setTxtSearch = this.props.setTxtSearch;
 
@@ -117,31 +118,71 @@ export class SearchArea extends Component {
 }
 
 export class Options extends Component {
- 
+
   clickedSortTp = React.createRef();
+  refOptions = React.createRef();
 
   state = {
     isActive: false,
+    selectedFilter: '최신순'
   }
+
+  // 외부화면 클릭 감지
+  // componentDidUpdate(privProps, privState) {
+  //   let target = this.props.refOutside;
+  //   let documentAddEvent = (e) => {
+  //     target.current.removeEventListener('click', documentAddEvent)
+  //     console.log(target)
+  //     if (target.current.contains(e.target))
+  //       this.setActive()
+  //     else
+  //       console.log('No')
+  //     // console.log(e.target)
+
+  //     // console.log(e.target.nodeName)
+  //     // console.log(this.props.refOutside.current)
+  //   }
+
+  //   // documentAddEvent();
+  //   target.current.addEventListener('click', documentAddEvent)
+  //   // if (privState.isActive != this.state.isActive) {
+  //   // }
+  // }
 
   // button 클릭 시 정렬메뉴 표시
   setActive = () => {
-    this.setState(this.state.isActive ? { isActive: false } : { isActive: true } )
+    this.setState(this.state.isActive ? { isActive: false } : { isActive: true })
+
+    const targetChk = (e) => {
+      document.removeEventListener('click', targetChk);
+
+      console.log(this.refOptions.current.contains(e.target))
+    }
+
+    document.addEventListener('click', targetChk)
   }
 
   // sortTp 변경
-  setSortTp = (param) => {
-    this.props.setSortTp(param);
+  setSortTp = (e) => {
+    let sortTp = e.target.dataset.sort;
+    let selectedFilter = e.target.innerText;
+    let nodeName = e.target.nodeName;
+
+    if (nodeName !== 'DIV') {
+      this.props.setSortTp(sortTp);
+      this.setState({
+        selectedFilter: selectedFilter
+      })
+    }
   }
 
   render() {
     return (
-      <div className={style.cardList__header__options}>
+      <div className={style.cardList__header__options} ref={this.refOptions}>
         <div>
           <input id='totChk' type='checkbox' onChange={this.props.setIsTotalChk} />
           <label htmlFor='totChk' tabIndex="0" style={{ outline: 'none' }}>
             <svg focusable="false" viewBox="0 0 24 24" style={{ display: 'inline-block', fill: 'rgb(0, 0, 0)', height: '14px', width: '14px', position: 'absolute', left: '0px', top: '50%', margin: '-7px 0 0 0', cursor: 'pointer' }}>
-              {/* <path fill="#B5B4B4" d="M22.285,1.715V22.22H1.725V1.715H22.285 M24,0H0.01v23.935H24V0L24,0z"></path> */}
               <polygon fill="#2A93F7" points="20.542,8.304 18.185,5.943 9.958,14.085 5.827,9.956 3.467,12.317 9.92,18.824 "></polygon>
             </svg>
           </label>
@@ -149,18 +190,17 @@ export class Options extends Component {
         </div>
 
         <button onClick={() => this.setActive()}>
-          이름순
+          {this.state.selectedFilter}
           <img width={'12'} alt='arrow_icon' src={require('./img/ic_arrow_down_02_s_normal@2x.e77da496.png')} />
           <div
             style={this.state.isActive ? { display: 'flex' } : { display: 'none' }}
-            onClick={(e) => { this.setSortTp(e.target.dataset.sort) }}
+            onClick={(e) => { this.setSortTp(e) }}
           >
-            <span data-sort='1'>이름순</span>
-            <span data-sort='2'>등록순</span>
-            <span data-sort='3'>최신순</span>
+            <span data-sort='1' className={this.state.selectedFilter == '이름순' ? style.selected : ''}>이름순</span>
+            <span data-sort='2' className={this.state.selectedFilter == '등록순' ? style.selected : ''}>등록순</span>
+            <span data-sort='3' className={this.state.selectedFilter == '최신순' ? style.selected : ''}>최신순</span>
           </div>
         </button>
-
 
       </div>
     )
@@ -178,7 +218,7 @@ export class CardListBody extends Component {
 
     return (
       <div className={style.cardList__body}>
-        { this.props.children }
+        {this.props.children}
       </div>
     )
   }
