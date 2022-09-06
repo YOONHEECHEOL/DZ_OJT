@@ -1,21 +1,12 @@
 import React, { Component } from "react";
-import style from './cardListSample.module.css';
+import style from '../cardListSample.module.css';
 
 export default class CallCustomer extends Component {
   state = {
-    arrayInfo: [
-      { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000', },
-      { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233', },
-      { groupCd: 'C3', groupNm: '컨설팅그룹', totCnt: '252', amt: '16778233', },
-      { groupCd: 'C4', groupNm: '기타', totCnt: '164', amt: '10953315', },
-      { groupCd: 'C5', groupNm: '유지보수그룹', totCnt: '164', amt: '10952362', },
-      { groupCd: 'C6', groupNm: '개발그룹', totCnt: '136', amt: '9075428', },
-      { groupCd: 'C7', groupNm: '경영관리그룹', totCnt: '104', amt: '6960670', }
-    ],
+    arrayInfo: this.props.rootArrayInfo,
     checkedList: new Set(),
-    isAllChecked: false
+    isAllChecked: false,
   }
-
 
   /**
    * 고객사 정보 호출 함수
@@ -90,34 +81,61 @@ export default class CallCustomer extends Component {
     let arrTmp = this.state.arrayInfo;
     let tmp = new Set();
 
+    // root용
+    let rTmp = [];
+
     if (isTotalChk) {
       arrTmp.map(i => tmp.add(i.groupCd));
       this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
+
+      // rootCheckedList 데이터 추가
+      arrTmp.map(i => rTmp.push(i));
+      this.props.setRootCheckedList(rTmp);
     } else {
       tmp.clear();
       this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
+      this.props.setRootCheckedList([])
     }
     console.log(this.state.checkedList)
   }
 
   // 단건 선택 시
-  setIsChecked = (groupCd, isChecked) => {
+  setIsChecked = (groupCd, isChecked, data) => {
     let tmp = this.state.checkedList;
+
+    // root용
+    let rTmp = this.state.arrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
+    console.log(rTmp)
 
     if (isChecked) {
       tmp.add(groupCd);
+      rTmp.push(data);
 
       this.setState(
         { checkedList: tmp }
       )
+      // this.props.setRootCheckedList(tmp)
     } else if (!isChecked && tmp.has(groupCd)) {
       tmp.delete(groupCd);
+      rTmp = rTmp.filter(i => {
+        return (
+          i.groupCd != groupCd
+        )
+      })
 
       this.setState(
         { checkedList: tmp }
       )
     }
-    console.log(this.state.checkedList)
+    this.props.setRootCheckedList(rTmp)
+    // console.log(this.state.checkedList)
+  }
+
+  // 카드 선택하기
+  setSelectedCard = (e) => {
+    // console.log(e.target.dataset.key)
+    this.props.setSelectedCard(e.target.dataset.key)
+    console.log(this.props.selectedCard)
   }
 
   render() {
@@ -135,10 +153,11 @@ export default class CallCustomer extends Component {
           // console.log(this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage))
           this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage).array.map((e) => {
             return (
-              <div key={e.groupCd} className={this.state.checkedList.has(e.groupCd) ? style.cardList__body__cards__checked : style.cardList__body__cards}>
+              // <div key={e.groupCd} onClick={e => console.log(e)} className={this.state.checkedList.has(e.groupCd) ? style.cardList__body__cards__checked : style.cardList__body__cards}>
+              <div key={e.groupCd} data-key={e.groupCd} onClick={e => this.setSelectedCard(e)} className={this.props.selectedCard == e.groupCd ? style.cardList__body__cards__checked : style.cardList__body__cards}>
                 <div>
                   <input id={'chk' + e.groupCd} type='checkbox' onChange={
-                    (item) => this.setIsChecked(e.groupCd, item.target.checked)
+                    (item) => this.setIsChecked(e.groupCd, item.target.checked, e)
                   } checked={this.state.checkedList.has(e.groupCd) ? true : false} />
                   <LabelFor groupCd={e.groupCd} />
                   {e.groupNm}
@@ -165,7 +184,6 @@ export class LabelFor extends Component {
     return (
       <label htmlFor={'chk' + groupCd}>
         <svg focusable="false" viewBox="0 0 24 24" style={{ display: 'inline-block', fill: 'rgb(0, 0, 0)', height: '14px', width: '14px', position: 'absolute', left: '0px', top: '50%', margin: '-7px 0 0 0', cursor: 'pointer' }}>
-          {/* <path fill="#B5B4B4" d="M22.285,1.715V22.22H1.725V1.715H22.285 M24,0H0.01v23.935H24V0L24,0z"></path> */}
           <polygon fill="#2A93F7" points="20.542,8.304 18.185,5.943 9.958,14.085 5.827,9.956 3.467,12.317 9.92,18.824 "></polygon>
         </svg>
       </label>

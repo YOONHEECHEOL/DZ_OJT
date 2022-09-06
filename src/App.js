@@ -17,6 +17,8 @@ import LifeCycleSample from './app-root/LifeCycleSample/LifeCycleSample';
 
 import CardListSample from './app-root/CardListSample/CardListSample';
 
+import style from './app-root/CardListSample/cardListSample.module.css';
+
 class App extends Component {
 
   state = {
@@ -44,7 +46,7 @@ class App extends Component {
   render() {
     let { mainTabVal, subTabVal } = this.state;
     return (
-      <div className="">
+      <div className={style.bg}>
         <div>
           <button onClick={() => { this.onClickMainTab("ReactSample") }}>ReactSample</button>
           <button onClick={() => { this.onClickMainTab("StateSample") }}>StateSample</button>

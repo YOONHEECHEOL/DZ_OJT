@@ -7,8 +7,26 @@ button {
   font-size: 12px;
 }
 
-button {
+
+
+/* button {
   cursor: pointer;
+} */
+
+.bg {
+  width: 100vw;
+  height: 100vh;
+  background: #f1f1f1;
+}
+
+.section {
+  padding: 30px;
+  overflow: hidden;
+}
+
+.section>div {
+  margin: 20px;
+  float: left;
 }
 
 input[type="checkbox"] {
@@ -119,6 +137,13 @@ input[type="checkbox"]:checked+label>svg {
   padding: 4px 0 0 0;
 }
 
+.cardList__header__options>button>span:first-child {
+  cursor: pointer;
+  position: relative;
+  background: url('./img/ic_arrow_down_02_m_normal.9469ed90.png') no-repeat right 0 center;
+  padding: 0 20px 0 0;
+}
+
 .cardList__header__options>button>div {
   display: none;
   flex-direction: column;
@@ -139,6 +164,7 @@ input[type="checkbox"]:checked+label>svg {
   border: 1px solid #e6e6e6;
   background-color: #fff;
   margin-bottom: 4px;
+  cursor: pointer;
 }
 
 .cardList__header__options>button>div>span.selected {
@@ -160,6 +186,8 @@ input[type="checkbox"]:checked+label>svg {
 
 .cardList__body {
   padding: 12px 0 0;
+  max-height: 543px;
+  overflow: scroll;
 }
 
 .cardList__body__cards {
@@ -198,3 +226,17 @@ input[type="checkbox"]:checked+label>svg {
 }
 
 /* // body */
+
+.cardList__footer>div {
+  border: 1px solid #a6a6a6;
+  /* background: #fafafa; */
+  padding: 14px;
+  margin: 0 0 5px 0;
+}
+
+.cardList__footer>div>h3 {
+  font-size: 16px;
+  padding: 0 0 6px 0;
+  margin: 0 0 6px 0;
+  border-bottom: 1px solid #a6a6a6;
+}
