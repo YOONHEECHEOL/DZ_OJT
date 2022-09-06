@@ -3,10 +3,16 @@ import style from '../cardListSample.module.css';
 
 export default class CardListFooter extends Component {
 
+  // 
   refGroupCd = React.createRef();
   refGroupNm = React.createRef();
   refTotCnt = React.createRef();
   refAmt = React.createRef();
+  //
+  refSelectedCardGroupCd = React.createRef();
+  refSelectedCardGroupNm = React.createRef();
+  refSelectedCardTotCnt = React.createRef();
+  refSelectedCardAmt = React.createRef();
 
   setAddCard = (upDown) => {
     let data = {
@@ -23,6 +29,29 @@ export default class CardListFooter extends Component {
     this.refGroupNm.current.value = '';
     this.refTotCnt.current.value = '';
     this.refAmt.current.value = '';
+  }
+
+  // 카드 수정하기
+  setUpdateSelectedCard = () => {
+    let data = {
+      groupCd: this.refSelectedCardGroupCd.current.innerText,
+      groupNm: this.refSelectedCardGroupNm.current.value,
+      totCnt: this.refSelectedCardTotCnt.current.value,
+      amt: this.refSelectedCardAmt.current.value
+    }
+
+    this.props.setUpdateSelectedCard(data);
+  }
+
+  setDeleteCheckedCards = () => {
+    let result = [];
+    
+    let tmp = [...this.props.rootArrayInfo];
+    let chkTmp = [...this.props.rootCheckedList];
+    
+    result = tmp.filter(i => !chkTmp.includes(i));
+
+    this.props.setDeleteCheckedCards(result);
   }
 
   render() {
@@ -61,6 +90,7 @@ export default class CardListFooter extends Component {
         </div>
         {/* 현재 선택된 카드의 인덱스가 몇번째인지 조회 */}
         <div>
+          <h3>선택된 카드</h3>
           {
             rootArrayInfo.map((item, index) => {
               return item.groupCd == this.props.selectedCard ? '선택된 카드의 인덱스는 전체' + (rootArrayInfo.length) + '개 중' + (index + 1) + '번째 카드입니다.' : '';
@@ -70,11 +100,26 @@ export default class CardListFooter extends Component {
         {/* 카드리스트 수정 기능 */}
         <div>
           <h3>카드리스트 수정</h3>
+          {
+            rootArrayInfo.map(i => {
+              if (this.props.selectedCard == i.groupCd) {
+                return (
+                  <div key={i.groupCd}>
+                    <span ref={this.refSelectedCardGroupCd}>{i.groupCd}</span><br />
+                    <input defaultValue={i.groupNm} ref={this.refSelectedCardGroupNm} /><br />
+                    <input defaultValue={i.totCnt} ref={this.refSelectedCardTotCnt} /><br />
+                    <input defaultValue={i.amt} ref={this.refSelectedCardAmt} /><br />
+                    <button onClick={this.setUpdateSelectedCard}>수정하기</button>
+                  </div>
+                )
+              }                
+            })
+          }
         </div>
         {/* 카드리스트 삭제 기능 */}
         <div>
           <h3>카드리스트 삭제</h3>
-          <button>체크된 카드 삭제하기</button>
+          <button onClick={this.setDeleteCheckedCards}>체크된 카드 삭제하기</button>
         </div>
         {/* 카드리스트 조회 기능 */}
         <div>

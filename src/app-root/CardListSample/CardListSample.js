@@ -68,13 +68,9 @@ export default class CardListSample extends Component {
     let tmp = this.state.rootArrayInfo;
     let tmp2 = this.state.rootAddedList;
 
-    console.log(tmp2)
-    console.log(typeof data)
-
     tmp2.push(data);
 
     upDown == 'up' ? tmp.unshift(data) : tmp.push(data);
-
 
     this.setState({
       rootArrayInfo: tmp,
@@ -87,6 +83,54 @@ export default class CardListSample extends Component {
     this.setState({
       selectedCard: data
     })
+  }
+
+  // 수정하기
+  setUpdateSelectedCard = (data) => {
+
+    console.log(data)
+
+    let tmp = this.state.rootArrayInfo;
+
+    let indexOfCard;
+    tmp.map((card, index) => {
+      if (card.groupCd == data.groupCd)
+        return indexOfCard = index;
+    })
+
+    console.log(indexOfCard);
+    console.log(tmp[indexOfCard]);
+
+    tmp[indexOfCard] = data;
+
+    this.setState({
+      rootArrayInfo: tmp
+    })
+  }
+
+  // 삭제하기
+  setDeleteCheckedCards = (result) => {
+    // let tmp = this.state.rootArrayInfo;
+    // let chkTmp = this.state.rootCheckedList;
+
+    // console.log(tmp)
+
+    // let result = [];
+
+    // result = tmp.filter(i => !chkTmp.includes(i));
+
+    // console.log(result)
+
+    // this.setState({
+    //   rootArrayInfo: [...this.state.rootArrayInfo.filter(i => !chkTmp.includes(i))],
+    // })
+    
+    console.log('hi')
+
+    this.setState({
+      rootArrayInfo: [...result]
+    })
+    console.log([...result])
   }
 
   render() {
@@ -137,6 +181,8 @@ export default class CardListSample extends Component {
           rootAddedList={rootAddedList}
           setRootArrayInfo={this.setRootArrayInfo}
           selectedCard={selectedCard}
+          setUpdateSelectedCard={this.setUpdateSelectedCard}
+          setDeleteCheckedCards={this.setDeleteCheckedCards}
         />
       </section>
     )

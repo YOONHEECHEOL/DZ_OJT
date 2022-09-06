@@ -3,7 +3,7 @@ import style from '../cardListSample.module.css';
 
 export default class CallCustomer extends Component {
   state = {
-    arrayInfo: this.props.rootArrayInfo,
+    arrayInfo: [...this.props.rootArrayInfo],
     checkedList: new Set(),
     isAllChecked: false,
   }
@@ -17,7 +17,8 @@ export default class CallCustomer extends Component {
    * @returns 
    */
   getDataInfo = (sortTp, txtSearch, isPaging, pagePerCnt, curPage) => {
-    let { arrayInfo } = this.state;
+    // let { arrayInfo } = this.state;
+    let arrayInfo = this.props.rootArrayInfo;
     let totCnt = 0;
     let tempArray = arrayInfo; //arrayCustomer
     let result = [];
@@ -78,7 +79,8 @@ export default class CallCustomer extends Component {
   // 전체선택 시
   isTotalChk = () => {
     let isTotalChk = this.props.isTotalChk;
-    let arrTmp = this.state.arrayInfo;
+    // let arrTmp = this.state.arrayInfo;
+    let arrTmp = this.props.rootArrayInfo;
     let tmp = new Set();
 
     // root용
@@ -104,7 +106,8 @@ export default class CallCustomer extends Component {
     let tmp = this.state.checkedList;
 
     // root용
-    let rTmp = this.state.arrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
+    // let rTmp = this.state.arrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
+    let rTmp = this.props.rootArrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
     console.log(rTmp)
 
     if (isChecked) {
