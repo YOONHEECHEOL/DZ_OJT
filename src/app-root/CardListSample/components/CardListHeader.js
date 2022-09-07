@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import style from '../cardListSample.module.css';
 
+// SearchArea와 Options 컴포넌트 합성
 export default class CardListHeader extends Component {
 
   render() {
@@ -17,18 +18,21 @@ export default class CardListHeader extends Component {
 
 }
 
+// 검색창 Component
 export class SearchArea extends Component {
 
   refInputTxt = React.createRef();
   refPressEnter = React.createRef();
 
-  printInput = () => {
+  // 검색
+  setTxtSearch = () => {
     let value = this.refInputTxt.current.value;
 
     this.refInputTxt.current.value = '';
     this.props.setTxtSearch(value);
   }
 
+  // EnterKey 입력 시 검색
   pressEnter = (key) => {
     let value = this.refInputTxt.current.value;
 
@@ -42,7 +46,7 @@ export class SearchArea extends Component {
     return (
       <div className={style.cardList__header__search}>
         <input placeholder='검색어를 입력하세요.' ref={this.refInputTxt} onKeyDown={(e) => this.pressEnter(e.key)} />
-        <button onClick={this.printInput} >
+        <button onClick={this.setTxtSearch} >
           <img className={style.ic_search_m_disable} alt='search_icon' src={require('../img/icon-btn-search.ea941f2d.png')} />
         </button>
       </div>
@@ -51,6 +55,7 @@ export class SearchArea extends Component {
 
 }
 
+// 전체선택, filter 선택 Component
 export class Options extends Component {
 
   clickedSortTp = React.createRef();
@@ -62,10 +67,8 @@ export class Options extends Component {
 
   // button 외부클릭 및 팝업창 호출
   setEventOnRoot = (e) => {
-    // 상위 태그
+    // 최상위 태그
     const root = document.querySelector('#root');
-
-    // this.setState({ isActive: true });
 
     const addEventHandler = (e) => {
       root.removeEventListener('click', addEventHandler);
@@ -103,7 +106,9 @@ export class Options extends Component {
     return (
       <div className={style.cardList__header__options}>
         <div>
-          <input id='totChk' type='checkbox' onChange={this.props.setIsTotalChk} />
+          <input id='totChk' type='checkbox' onChange={this.props.setIsTotalChk} checked={
+            this.props.isTotalChk
+          } />
           <LabelFor htmlFor='totChk' />
           <span htmlFor={'totalCheck'}>전체선택</span>
         </div>

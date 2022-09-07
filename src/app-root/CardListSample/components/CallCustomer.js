@@ -79,13 +79,12 @@ export default class CallCustomer extends Component {
   // 전체선택 시
   isTotalChk = () => {
     let isTotalChk = this.props.isTotalChk;
-    // let arrTmp = this.state.arrayInfo;
     let arrTmp = this.props.rootArrayInfo;
     let tmp = new Set();
 
     // root용
     let rTmp = [];
-
+    // isTotalChk
     if (isTotalChk) {
       arrTmp.map(i => tmp.add(i.groupCd));
       this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
@@ -96,9 +95,8 @@ export default class CallCustomer extends Component {
     } else {
       tmp.clear();
       this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
-      this.props.setRootCheckedList([])
+      this.props.setRootCheckedList([]);
     }
-    console.log(this.state.checkedList)
   }
 
   // 단건 선택 시
@@ -106,8 +104,8 @@ export default class CallCustomer extends Component {
     let tmp = this.state.checkedList;
 
     // root용
-    // let rTmp = this.state.arrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
     let rTmp = this.props.rootArrayInfo.filter(i => { return this.state.checkedList.has(i.groupCd) });
+
     console.log(rTmp)
 
     if (isChecked) {
@@ -131,7 +129,9 @@ export default class CallCustomer extends Component {
       )
     }
     this.props.setRootCheckedList(rTmp)
+    // this.props.setOffTotalChk();
     // console.log(this.state.checkedList)
+
   }
 
   // 카드 선택하기
@@ -153,11 +153,13 @@ export default class CallCustomer extends Component {
     return (
       <>
         {
-          // console.log(this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage))
           this.getDataInfo(sortTp, txtSearch, isPaging, pagePerCnt, curPage).array.map((e) => {
             return (
-              // <div key={e.groupCd} onClick={e => console.log(e)} className={this.state.checkedList.has(e.groupCd) ? style.cardList__body__cards__checked : style.cardList__body__cards}>
-              <div key={e.groupCd} data-key={e.groupCd} onClick={e => this.setSelectedCard(e)} className={this.props.selectedCard == e.groupCd ? style.cardList__body__cards__checked : style.cardList__body__cards}>
+              <div
+                key={e.groupCd}
+                data-key={e.groupCd}
+                onClick={e => this.setSelectedCard(e)}
+                className={this.props.selectedCard == e.groupCd ? style.cardList__body__cards__checked : style.cardList__body__cards}>
                 <div>
                   <input id={'chk' + e.groupCd} type='checkbox' onChange={
                     (item) => this.setIsChecked(e.groupCd, item.target.checked, e)

@@ -15,7 +15,7 @@ button {
 
 .bg {
   width: 100vw;
-  height: 100vh;
+  min-height: 100vh;
   background: #f1f1f1;
 }
 
@@ -191,7 +191,7 @@ input[type="checkbox"]:checked+label>svg {
 }
 
 .cardList__body__cards {
-  padding: 16px;
+  padding: 13px 16px;
   background-color: #fff;
   margin-bottom: 6px;
   border: 1px solid #e0e0e0;
@@ -202,7 +202,7 @@ input[type="checkbox"]:checked+label>svg {
 }
 
 .cardList__body__cards__checked {
-  padding: 16px;
+  padding: 13px 16px;
   background-color: #fff;
   margin-bottom: 6px;
   border: 1px solid #2A93F7;
@@ -216,6 +216,7 @@ input[type="checkbox"]:checked+label>svg {
 .cardList__body__cards__checked>div {
   display: flex;
   align-items: center;
+  font-size: 13px;
 }
 
 .cardList__body__cards>div:last-child,
@@ -223,14 +224,16 @@ input[type="checkbox"]:checked+label>svg {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
+  font-size: 12px;
+  color: #4a4a4a;
 }
 
 /* // body */
 
 .cardList__footer>div {
   border: 1px solid #a6a6a6;
-  /* background: #fafafa; */
-  padding: 14px;
+  background: #fafafa;
+  padding: 12px;
   margin: 0 0 5px 0;
 }
 
@@ -239,4 +242,28 @@ input[type="checkbox"]:checked+label>svg {
   padding: 0 0 6px 0;
   margin: 0 0 6px 0;
   border-bottom: 1px solid #a6a6a6;
+}
+
+.cardList__footer>div>h4 {
+  font-size: 14px;
+  padding: 0 0 3px 0;
+  margin: 6px 0 2px;
+  /* border-bottom: 1px solid #cdcdcd; */
+}
+
+.cardList__footer>div>div {
+  border: 1px solid #e6e6e6;
+  padding: 8px;
+  margin: 2px 0 2px 0;
+}
+
+.boxs>div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 4px 0;
+}
+
+.boxs>div:first-child {
+  padding: 0 0 12px 0;
 }
