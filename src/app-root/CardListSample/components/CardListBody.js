@@ -3,10 +3,18 @@ import style from '../cardListSample.module.css';
 
 export default class CardListBody extends Component {
 
+  state = {
+    size: this.props.size
+  }
+
+  componentDidMount() {
+
+  }
+
   render() {
 
     return (
-      <div className={style.cardList__body}>
+      <div className={style.cardList__body} style={{ height: this.props.size }}>
         {this.props.children}
       </div>
     )

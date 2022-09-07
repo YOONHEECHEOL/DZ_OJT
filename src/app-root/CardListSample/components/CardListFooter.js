@@ -14,6 +14,9 @@ export default class CardListFooter extends Component {
   refSelectedCardTotCnt = React.createRef();
   refSelectedCardAmt = React.createRef();
 
+  // 크기수정용
+  refSize = React.createRef();
+
   state = {
     menu: '1'
   }
@@ -81,6 +84,13 @@ export default class CardListFooter extends Component {
     return cdArr;
   }
 
+  setSize = () => {
+    let v = this.refSize.current.value;
+
+    console.log(v)
+    this.props.setSize(v);
+  }
+
   render() {
     let rootCheckedList = this.props.rootCheckedList;
     let rootArrayInfo = this.props.rootArrayInfo;
@@ -96,6 +106,7 @@ export default class CardListFooter extends Component {
           <button data-menu='3' onClick={e => this.setChangeMenu(e)}>선택된 카드 조회/수정</button>
           <button data-menu='4' onClick={e => this.setChangeMenu(e)}>카드리스트 삭제</button>
           <button data-menu='5' onClick={e => this.setChangeMenu(e)}>카드리스트 조회</button>
+          <button data-menu='6' onClick={e => this.setChangeMenu(e)}>크기수정</button>
         </div>
 
         {
@@ -232,6 +243,16 @@ export default class CardListFooter extends Component {
                 </div>
               </div>
             </>
+            : undefined
+        }
+
+        {
+          menu == '6' ?
+            <div>
+              <h3>크기수정</h3>
+              <input type={'number'} ref={this.refSize} />
+              <button onClick={this.setSize}>크기변경</button>
+            </div>
             : undefined
         }
 

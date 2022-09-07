@@ -28,6 +28,14 @@ export default class CardListSample extends Component {
     rootAddedList: [], // 추가된 카드리스트
     rootDeletedList: [], // 삭제된 카드리스트
     selectedCard: '', // 선택된 카드
+    size: 300
+  }
+
+  // 크기변경
+  setSize = (param) => {
+    this.setState({
+      size: param
+    })
   }
 
   // 검색
@@ -176,6 +184,9 @@ export default class CardListSample extends Component {
     // 전체선택 여부 확인
     let { isTotalChk } = this.state;
 
+    // size
+    let { size } = this.state;
+
     return (
       <section className={style.section} >
         <div className={style.cardList}>
@@ -190,6 +201,7 @@ export default class CardListSample extends Component {
               />}
           />
           <CardListBody
+            size={size}
             children={
               <CallCustomer
                 rootArrayInfo={rootArrayInfo}
@@ -205,6 +217,7 @@ export default class CardListSample extends Component {
                 selectedCard={selectedCard}
                 setIsTotalChk={this.setIsTotalChk}
                 setOffTotalChk={this.setOffTotalChk}
+
               />}
           />
         </div>
@@ -218,6 +231,7 @@ export default class CardListSample extends Component {
           selectedCard={selectedCard}
           setUpdateSelectedCard={this.setUpdateSelectedCard}
           setDeleteCheckedCards={this.setDeleteCheckedCards}
+          setSize={this.setSize}
         />
       </section>
     )
