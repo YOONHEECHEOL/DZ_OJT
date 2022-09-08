@@ -14,7 +14,7 @@ export default class CardListBody extends Component {
   render() {
 
     return (
-      <div className={style.cardList__body} style={{ height: this.props.size }}>
+      <div className={style.cardList__body} style={{ height: this.props.size + 'px' }}>
         {this.props.children}
       </div>
     )

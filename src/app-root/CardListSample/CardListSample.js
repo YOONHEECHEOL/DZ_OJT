@@ -14,6 +14,7 @@ export default class CardListSample extends Component {
     pagePerCnt: 1,
     curPage: 1,
     isTotalChk: false,
+    isTotalChkForCheckBox: false,
     rootArrayInfo: [
       { groupCd: 'C1', groupNm: '전체', totCnt: '1435', amt: '95674000', },
       { groupCd: 'C2', groupNm: '영업그룹', totCnt: '357', amt: '16778233', },
@@ -29,6 +30,13 @@ export default class CardListSample extends Component {
     rootDeletedList: [], // 삭제된 카드리스트
     selectedCard: '', // 선택된 카드
     size: 300
+  }
+
+  refTest = React.createRef();
+
+  componentDidUpdate(previousProps, previousState) {
+    if (this.refTest.getIsAllChecked)
+      this.setState({ isTotalChk: true })
   }
 
   // 크기변경
@@ -182,7 +190,7 @@ export default class CardListSample extends Component {
     let { sortTp, txtSearch, isPaging, curPage, pagePerCnt } = this.state;
 
     // 전체선택 여부 확인
-    let { isTotalChk } = this.state;
+    let { isTotalChk, isTotalChkForCheckBox } = this.state;
 
     // size
     let { size } = this.state;
@@ -198,6 +206,7 @@ export default class CardListSample extends Component {
                 setSortTp={this.setSortTp}
                 setIsTotalChk={this.setIsTotalChk}
                 isTotalChk={isTotalChk}
+                isTotalChkForCheckBox={isTotalChkForCheckBox}
               />}
           />
           <CardListBody
@@ -217,7 +226,7 @@ export default class CardListSample extends Component {
                 selectedCard={selectedCard}
                 setIsTotalChk={this.setIsTotalChk}
                 setOffTotalChk={this.setOffTotalChk}
-
+                refTest={this.refTest}
               />}
           />
         </div>

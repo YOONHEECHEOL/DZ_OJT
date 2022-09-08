@@ -107,7 +107,7 @@ export class Options extends Component {
       <div className={style.cardList__header__options}>
         <div>
           <input id='totChk' type='checkbox' onChange={this.props.setIsTotalChk} checked={
-            this.props.isTotalChk
+            this.props.isTotalChkForCheckBox
           } />
           <LabelFor htmlFor='totChk' />
           <span htmlFor={'totalCheck'}>전체선택</span>

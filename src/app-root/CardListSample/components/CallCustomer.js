@@ -8,6 +8,12 @@ export default class CallCustomer extends Component {
     isAllChecked: false,
   }
 
+
+  getIsAllChecked = () => {
+    console.log('CallCustomer가 실행!')
+    return this.state.isAllChecked;
+  }
+
   /**
    * 고객사 정보 호출 함수
    * @param {string} sortTp 정렬구분 ('1': 이름순, '2': 등록순, '3': 수정순)
@@ -74,6 +80,9 @@ export default class CallCustomer extends Component {
   componentDidUpdate(previousProps, previousState) {
     if (previousProps.isTotalChk !== this.props.isTotalChk)
       this.isTotalChk();
+
+    if (this.state.checkedList.size == this.props.rootArrayInfo.length)
+      this.getIsAllChecked()
   }
 
   // 전체선택 시
@@ -87,14 +96,14 @@ export default class CallCustomer extends Component {
     // isTotalChk
     if (isTotalChk) {
       arrTmp.map(i => tmp.add(i.groupCd));
-      this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
+      this.setState({ checkedList: tmp, isAllChecked: true });
 
       // rootCheckedList 데이터 추가
       arrTmp.map(i => rTmp.push(i));
       this.props.setRootCheckedList(rTmp);
     } else {
       tmp.clear();
-      this.setState({ checkedList: tmp, isAllChecked: { allChecked: true } });
+      this.setState({ checkedList: tmp, isAllChecked: false });
       this.props.setRootCheckedList([]);
     }
   }
